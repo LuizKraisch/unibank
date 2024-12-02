@@ -1,0 +1,706 @@
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2024-12-02 14:40:20.634253', '2024-12-02 14:40:20.634256') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateEvents (20241129021900)
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateEvents (20241129021900)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "events" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "entity_id" integer, "type" varchar, "data" json, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241129021900') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateBankAccounts (20241129022446)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "bank_accounts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "account_id" integer, "balance" decimal(8,2), "holder" varchar, "status" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241129022446') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateTransactions (20241129022557)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "transactions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "account_id" integer, "type" varchar, "amount" decimal(8,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241129022557') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/works" for ::1 at 2024-12-02 11:42:25 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActionController::RoutingError (No route matches [GET] "/works"):
+  
+Started GET "/works" for ::1 at 2024-12-02 11:42:25 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/works"):
+  
+Started GET "/queries" for ::1 at 2024-12-02 11:46:33 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/queries"):
+  
+Started GET "/accounts/queries" for ::1 at 2024-12-02 11:46:45 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/accounts/queries"):
+  
+Started GET "/accounts/commands" for ::1 at 2024-12-02 11:47:16 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/accounts/commands"):
+  
+Started GET "/accounts/queries/1" for ::1 at 2024-12-02 11:49:00 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"id"=>"1"}
+  [1m[36mRead::BankAccount Load (0.3ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:7:in `execute'
+  [1m[36mRead::Transaction Load (0.2ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" IS NULL ORDER BY "created_by" ASC[0m
+  ↳ app/controllers/accounts/queries_controller.rb:4:in `show'
+Completed 500 Internal Server Error in 26ms (ActiveRecord: 2.4ms | Allocations: 13840)
+
+
+  
+ActiveRecord::StatementInvalid (SQLite3::SQLException: no such column: "created_by" - should this be a string literal in single-quotes?:
+SELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" IS NULL ORDER BY "created_by" ASC
+                                                                                               ^):
+  
+Started GET "/accounts/queries/:id?=1" for ::1 at 2024-12-02 11:49:07 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.2ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:7:in `execute'
+  [1m[36mRead::Transaction Load (0.9ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" IS NULL ORDER BY "created_by" ASC[0m
+  ↳ app/controllers/accounts/queries_controller.rb:4:in `show'
+Completed 500 Internal Server Error in 4ms (ActiveRecord: 1.0ms | Allocations: 1340)
+
+
+  
+ActiveRecord::StatementInvalid (SQLite3::SQLException: no such column: "created_by" - should this be a string literal in single-quotes?:
+SELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" IS NULL ORDER BY "created_by" ASC
+                                                                                               ^):
+  
+Started GET "/accounts/queries/:id?=1" for ::1 at 2024-12-02 11:49:28 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.0ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:7:in `execute'
+  [1m[36mRead::Transaction Load (0.2ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" IS NULL ORDER BY "transactions"."created_at" ASC[0m
+  ↳ app/controllers/accounts/queries_controller.rb:4:in `show'
+Completed 200 OK in 5ms (Views: 0.4ms | ActiveRecord: 1.4ms | Allocations: 3522)
+
+
+Started GET "/accounts/queries/:id?=2" for ::1 at 2024-12-02 11:49:34 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.2ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:7:in `execute'
+  [1m[36mRead::Transaction Load (0.1ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" IS NULL ORDER BY "transactions"."created_at" ASC[0m
+  ↳ app/controllers/accounts/queries_controller.rb:4:in `show'
+Completed 200 OK in 6ms (Views: 1.8ms | ActiveRecord: 0.3ms | Allocations: 1156)
+
+
+Started GET "/works" for ::1 at 2024-12-02 11:49:49 -0300
+  
+ActionController::RoutingError (No route matches [GET] "/works"):
+  
+Started GET "/up" for ::1 at 2024-12-02 11:49:51 -0300
+Processing by Rails::HealthController#show as HTML
+  Rendering html template
+  Rendered html template (Duration: 0.0ms | Allocations: 8)
+Completed 200 OK in 5ms (Views: 1.9ms | ActiveRecord: 0.0ms | Allocations: 2123)
+
+
+Started POST "/accounts/commands" for ::1 at 2024-12-02 11:50:42 -0300
+Processing by Accounts::CommandsController#create as */*
+Completed 500 Internal Server Error in 3ms (ActiveRecord: 0.0ms | Allocations: 224)
+
+
+  
+SyntaxError (/Users/luizkraisch/projects/unibank/app/commands/create_account_command.rb:2: syntax error, unexpected '(', expecting ';' or '\n'
+  def def initialize(account_id)
+                    ^
+/Users/luizkraisch/projects/unibank/app/commands/create_account_command.rb:10: syntax error, unexpected `end'):
+  
+app/commands/create_account_command.rb:2: syntax error, unexpected '(', expecting ';' or '\n'
+app/commands/create_account_command.rb:10: syntax error, unexpected `end'
+app/controllers/accounts/commands_controller.rb:3:in `create'
+Started POST "/accounts/commands" for ::1 at 2024-12-02 11:50:58 -0300
+Processing by Accounts::CommandsController#create as */*
+Completed 500 Internal Server Error in 4ms (ActiveRecord: 1.1ms | Allocations: 1692)
+
+
+  
+ActiveRecord::SubclassNotFound (The single-table inheritance mechanism failed to locate the subclass: 'account_created'. This error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this column if you didn't intend it to be used for storing the inheritance class or overwrite Event.inheritance_column to use another column for that information.):
+  
+app/commands/create_account_command.rb:7:in `execute'
+app/controllers/accounts/commands_controller.rb:3:in `create'
+Started POST "/accounts/commands" for ::1 at 2024-12-02 11:51:40 -0300
+Processing by Accounts::CommandsController#create as */*
+Completed 500 Internal Server Error in 3ms (ActiveRecord: 1.1ms | Allocations: 1479)
+
+
+  
+ActiveRecord::SubclassNotFound (The single-table inheritance mechanism failed to locate the subclass: 'account_created'. This error is raised because the column 'type' is reserved for storing the class in case of inheritance. Please rename this column if you didn't intend it to be used for storing the inheritance class or overwrite Event.inheritance_column to use another column for that information.):
+  
+app/commands/create_account_command.rb:7:in `execute'
+app/controllers/accounts/commands_controller.rb:3:in `create'
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.0ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2024-12-02 14:54:05.269716', '2024-12-02 14:54:05.269718') RETURNING "key"[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreateEvents (20241129021900)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.5ms)[0m  [1m[35mCREATE TABLE "events" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "entity_id" integer, "event_type" varchar, "data" json, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241129021900') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateBankAccounts (20241129022446)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "bank_accounts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "account_id" integer, "balance" decimal(8,2), "holder" varchar, "status" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241129022446') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateTransactions (20241129022557)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  [1m[35mCREATE TABLE "transactions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "account_id" integer, "transaction_type" varchar, "amount" decimal(8,2), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.0ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20241129022557') RETURNING "version"[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started POST "/accounts/commands" for ::1 at 2024-12-02 11:54:20 -0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Accounts::CommandsController#create as */*
+Completed 422 Unprocessable Content in 17ms (ActiveRecord: 1.3ms | Allocations: 15889)
+
+
+  
+ActiveRecord::RecordInvalid (Validation failed: Data can't be blank):
+  
+app/commands/create_account_command.rb:7:in `execute'
+app/controllers/accounts/commands_controller.rb:3:in `create'
+Started POST "/accounts/commands" for ::1 at 2024-12-02 11:55:10 -0300
+Processing by Accounts::CommandsController#create as */*
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/create_account_command.rb:7:in `execute'
+  [1m[36mEvent Create (0.5ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", nil], ["event_type", "account_created"], ["data", "{}"], ["created_at", "2024-12-02 14:55:10.576366"], ["updated_at", "2024-12-02 14:55:10.576366"]]
+  ↳ app/commands/create_account_command.rb:7:in `execute'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/create_account_command.rb:7:in `execute'
+Completed 422 Unprocessable Content in 10ms (ActiveRecord: 2.1ms | Allocations: 11962)
+
+
+  
+ActiveRecord::RecordInvalid (Validation failed: Account can't be blank):
+  
+app/commands/create_account_command.rb:8:in `execute'
+app/controllers/accounts/commands_controller.rb:3:in `create'
+Started POST "/accounts/commands?account_id=1" for ::1 at 2024-12-02 11:55:42 -0300
+Processing by Accounts::CommandsController#create as */*
+  Parameters: {"account_id"=>"1"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/create_account_command.rb:7:in `execute'
+  [1m[36mEvent Create (2.1ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "account_created"], ["data", "{}"], ["created_at", "2024-12-02 14:55:42.138574"], ["updated_at", "2024-12-02 14:55:42.138574"]]
+  ↳ app/commands/create_account_command.rb:7:in `execute'
+  [1m[36mTRANSACTION (1.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/create_account_command.rb:7:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/create_account_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Create (1.1ms)[0m  [1m[32mINSERT INTO "bank_accounts" ("account_id", "balance", "holder", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["balance", 0.0], ["holder", nil], ["status", nil], ["created_at", "2024-12-02 14:55:42.146427"], ["updated_at", "2024-12-02 14:55:42.146427"]]
+  ↳ app/commands/create_account_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/create_account_command.rb:8:in `execute'
+Completed 201 Created in 12ms (ActiveRecord: 4.6ms | Allocations: 3257)
+
+
+Started GET "/accounts/queries/:id?=2" for ::1 at 2024-12-02 11:55:45 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:7:in `execute'
+  [1m[36mRead::Transaction Load (0.0ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" IS NULL ORDER BY "transactions"."created_at" ASC[0m
+  ↳ app/controllers/accounts/queries_controller.rb:4:in `show'
+Completed 200 OK in 8ms (Views: 0.6ms | ActiveRecord: 0.3ms | Allocations: 3868)
+
+
+Started GET "/accounts/queries/:id?account_id=1" for ::1 at 2024-12-02 11:56:03 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"account_id"=>"1", "id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.2ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:7:in `execute'
+  [1m[36mRead::Transaction Load (0.1ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" = ? ORDER BY "transactions"."created_at" ASC[0m  [["account_id", 1]]
+  ↳ app/controllers/accounts/queries_controller.rb:4:in `show'
+Completed 200 OK in 6ms (Views: 1.7ms | ActiveRecord: 0.3ms | Allocations: 1447)
+
+
+Started POST "/accounts/commands/1/deposit?amount=3000.0" for ::1 at 2024-12-02 11:57:29 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>"1"}
+Completed 500 Internal Server Error in 7ms (ActiveRecord: 0.0ms | Allocations: 924)
+
+
+  
+SyntaxError (/Users/luizkraisch/projects/unibank/app/commands/deposit_money_command.rb:8: syntax error, unexpected '}', expecting =>
+...y_deposited', data: { @amount })
+...                              ^
+):
+  
+app/commands/deposit_money_command.rb:8: syntax error, unexpected '}', expecting =>
+app/controllers/accounts/commands_controller.rb:8:in `deposit'
+Started POST "/accounts/commands/1/deposit?amount=3000.0" for ::1 at 2024-12-02 11:58:45 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>"1"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (0.5ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", nil], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 14:58:45.432929"], ["updated_at", "2024-12-02 14:58:45.432929"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.0ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+Completed 500 Internal Server Error in 8ms (ActiveRecord: 2.4ms | Allocations: 7108)
+
+
+  
+NoMethodError (undefined method `balance' for nil:NilClass):
+  
+app/commands/deposit_money_command.rb:10:in `execute'
+app/controllers/accounts/commands_controller.rb:11:in `deposit'
+Started POST "/accounts/commands/:account_id/deposit?amount=3000.0" for ::1 at 2024-12-02 11:59:04 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>":account_id"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (1.4ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", nil], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 14:59:04.792254"], ["updated_at", "2024-12-02 14:59:04.792254"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+Completed 500 Internal Server Error in 5ms (ActiveRecord: 1.7ms | Allocations: 2127)
+
+
+  
+NoMethodError (undefined method `balance' for nil:NilClass):
+  
+app/commands/deposit_money_command.rb:10:in `execute'
+app/controllers/accounts/commands_controller.rb:11:in `deposit'
+Started POST "/accounts/commands/:account_id/deposit?amount=3000.0" for ::1 at 2024-12-02 12:00:20 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>":account_id"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (0.4ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 0], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 15:00:20.881886"], ["updated_at", "2024-12-02 15:00:20.881886"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.0ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", nil], ["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+Completed 500 Internal Server Error in 7ms (ActiveRecord: 1.9ms | Allocations: 6980)
+
+
+  
+NoMethodError (undefined method `balance' for nil:NilClass):
+  
+app/commands/deposit_money_command.rb:10:in `execute'
+app/controllers/accounts/commands_controller.rb:11:in `deposit'
+Started POST "/accounts/commands/:account_id/deposit?amount=3000.0" for ::1 at 2024-12-02 12:00:22 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>":account_id"}
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (2.4ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 0], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 15:00:22.140327"], ["updated_at", "2024-12-02 15:00:22.140327"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", nil], ["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+Completed 500 Internal Server Error in 11ms (ActiveRecord: 3.2ms | Allocations: 1993)
+
+
+  
+NoMethodError (undefined method `balance' for nil:NilClass):
+  
+app/commands/deposit_money_command.rb:10:in `execute'
+app/controllers/accounts/commands_controller.rb:11:in `deposit'
+Started POST "/accounts/commands/:id/deposit?amount=3000.0" for ::1 at 2024-12-02 12:00:27 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>":id"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (2.4ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 0], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 15:00:27.759603"], ["updated_at", "2024-12-02 15:00:27.759603"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", nil], ["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+Completed 500 Internal Server Error in 7ms (ActiveRecord: 2.7ms | Allocations: 1992)
+
+
+  
+NoMethodError (undefined method `balance' for nil:NilClass):
+  
+app/commands/deposit_money_command.rb:10:in `execute'
+app/controllers/accounts/commands_controller.rb:11:in `deposit'
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:01:20 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms | Allocations: 99)
+
+
+  
+NameError (uninitialized constant Accounts::CommandsController::WithdrawMoneyCommand):
+  
+app/controllers/accounts/commands_controller.rb:16:in `withdraw'
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:01:39 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms | Allocations: 135)
+
+
+  
+NameError (uninitialized constant WithdrawMoneyCommand):
+  
+app/controllers/accounts/commands_controller.rb:16:in `withdraw'
+Started POST "/accounts/commands/:id/deposit?amount=3000.0" for ::1 at 2024-12-02 12:02:06 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>":id"}
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (0.5ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 0], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 15:02:06.102412"], ["updated_at", "2024-12-02 15:02:06.102412"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.0ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", nil], ["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+Completed 500 Internal Server Error in 27ms (ActiveRecord: 2.2ms | Allocations: 7003)
+
+
+  
+NoMethodError (undefined method `balance' for nil:NilClass):
+  
+app/commands/deposit_money_command.rb:10:in `execute'
+app/controllers/accounts/commands_controller.rb:11:in `deposit'
+Started POST "/accounts/commands/1/deposit?amount=3000.0" for ::1 at 2024-12-02 12:02:11 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>"1"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (1.8ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 15:02:11.056757"], ["updated_at", "2024-12-02 15:02:11.056757"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mRead::BankAccount Update (2.7ms)[0m  [1m[33mUPDATE "bank_accounts" SET "balance" = ?, "updated_at" = ? WHERE "bank_accounts"."id" = ?[0m  [["balance", 3000.0], ["updated_at", "2024-12-02 15:02:11.067941"], ["id", 1]]
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+  [1m[36mRead::Transaction Create (0.6ms)[0m  [1m[32mINSERT INTO "transactions" ("account_id", "transaction_type", "amount", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["transaction_type", "deposit"], ["amount", 3000.0], ["created_at", "2024-12-02 15:02:11.082382"], ["updated_at", "2024-12-02 15:02:11.082382"]]
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+Completed 200 OK in 28ms (ActiveRecord: 6.1ms | Allocations: 13205)
+
+
+Started GET "/accounts/queries/:id?account_id=1" for ::1 at 2024-12-02 12:02:17 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"account_id"=>"1", "id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.2ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:9:in `execute'
+  [1m[36mRead::Transaction Load (0.2ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" = ? ORDER BY "transactions"."created_at" ASC[0m  [["account_id", 1]]
+  ↳ app/controllers/accounts/queries_controller.rb:7:in `show'
+Completed 200 OK in 7ms (Views: 2.2ms | ActiveRecord: 0.3ms | Allocations: 1500)
+
+
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:02:26 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+Completed 500 Internal Server Error in 1ms (ActiveRecord: 0.0ms | Allocations: 91)
+
+
+  
+NameError (uninitialized constant WithdrawMoneyCommand):
+  
+app/controllers/accounts/commands_controller.rb:16:in `withdraw'
+Started POST "/accounts/commands/1/deposit?amount=3000.0" for ::1 at 2024-12-02 12:02:41 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>"1"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (1.1ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 15:02:41.680435"], ["updated_at", "2024-12-02 15:02:41.680435"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mRead::BankAccount Update (1.0ms)[0m  [1m[33mUPDATE "bank_accounts" SET "balance" = ?, "updated_at" = ? WHERE "bank_accounts"."id" = ?[0m  [["balance", 6000.0], ["updated_at", "2024-12-02 15:02:41.690151"], ["id", 1]]
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+  [1m[36mRead::Transaction Create (0.5ms)[0m  [1m[32mINSERT INTO "transactions" ("account_id", "transaction_type", "amount", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["transaction_type", "deposit"], ["amount", 3000.0], ["created_at", "2024-12-02 15:02:41.695845"], ["updated_at", "2024-12-02 15:02:41.695845"]]
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+Completed 200 OK in 17ms (ActiveRecord: 3.2ms | Allocations: 5016)
+
+
+Started GET "/accounts/queries/:id?account_id=1" for ::1 at 2024-12-02 12:02:43 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"account_id"=>"1", "id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.2ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:9:in `execute'
+  [1m[36mRead::Transaction Load (1.1ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" = ? ORDER BY "transactions"."created_at" ASC[0m  [["account_id", 1]]
+  ↳ app/controllers/accounts/queries_controller.rb:7:in `show'
+Completed 200 OK in 7ms (Views: 2.0ms | ActiveRecord: 1.2ms | Allocations: 1212)
+
+
+Started POST "/accounts/commands?account_id=1" for ::1 at 2024-12-02 12:02:46 -0300
+Processing by Accounts::CommandsController#create as */*
+  Parameters: {"account_id"=>"1"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/create_account_command.rb:9:in `execute'
+  [1m[36mEvent Create (1.7ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "account_created"], ["data", "{}"], ["created_at", "2024-12-02 15:02:46.449011"], ["updated_at", "2024-12-02 15:02:46.449011"]]
+  ↳ app/commands/create_account_command.rb:9:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/create_account_command.rb:9:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/create_account_command.rb:10:in `execute'
+  [1m[36mRead::BankAccount Create (0.8ms)[0m  [1m[32mINSERT INTO "bank_accounts" ("account_id", "balance", "holder", "status", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["balance", 0.0], ["holder", nil], ["status", nil], ["created_at", "2024-12-02 15:02:46.452957"], ["updated_at", "2024-12-02 15:02:46.452957"]]
+  ↳ app/commands/create_account_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/create_account_command.rb:10:in `execute'
+Completed 201 Created in 19ms (ActiveRecord: 2.8ms | Allocations: 3940)
+
+
+Started GET "/accounts/queries/:id?account_id=1" for ::1 at 2024-12-02 12:02:49 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"account_id"=>"1", "id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.5ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:9:in `execute'
+  [1m[36mRead::Transaction Load (0.1ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" = ? ORDER BY "transactions"."created_at" ASC[0m  [["account_id", 1]]
+  ↳ app/controllers/accounts/queries_controller.rb:7:in `show'
+Completed 200 OK in 4ms (Views: 2.0ms | ActiveRecord: 0.6ms | Allocations: 1210)
+
+
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:02:58 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms | Allocations: 90)
+
+
+  
+NameError (uninitialized constant WithdrawMoneyCommand):
+  
+app/controllers/accounts/commands_controller.rb:16:in `withdraw'
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:03:44 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms | Allocations: 90)
+
+
+  
+NameError (uninitialized constant WithdrawMoneyCommand):
+  
+app/controllers/accounts/commands_controller.rb:16:in `withdraw'
+Started POST "/accounts/commands/1/deposit?amount=3000.0" for ::1 at 2024-12-02 12:03:57 -0300
+Processing by Accounts::CommandsController#deposit as */*
+  Parameters: {"amount"=>"3000.0", "id"=>"1"}
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mEvent Create (1.1ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "money_deposited"], ["data", "{\"amount\":3000.0}"], ["created_at", "2024-12-02 15:03:57.981686"], ["updated_at", "2024-12-02 15:03:57.981686"]]
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:8:in `execute'
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/deposit_money_command.rb:9:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mRead::BankAccount Update (1.0ms)[0m  [1m[33mUPDATE "bank_accounts" SET "balance" = ?, "updated_at" = ? WHERE "bank_accounts"."id" = ?[0m  [["balance", 9000.0], ["updated_at", "2024-12-02 15:03:57.986251"], ["id", 1]]
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+  [1m[36mRead::Transaction Create (0.9ms)[0m  [1m[32mINSERT INTO "transactions" ("account_id", "transaction_type", "amount", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["transaction_type", "deposit"], ["amount", 3000.0], ["created_at", "2024-12-02 15:03:57.989262"], ["updated_at", "2024-12-02 15:03:57.989262"]]
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/deposit_money_command.rb:12:in `execute'
+Completed 200 OK in 13ms (ActiveRecord: 3.7ms | Allocations: 5017)
+
+
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:04:05 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+Completed 500 Internal Server Error in 0ms (ActiveRecord: 0.0ms | Allocations: 90)
+
+
+  
+NameError (uninitialized constant WithdrawMoneyCommand):
+  
+app/controllers/accounts/commands_controller.rb:16:in `withdraw'
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:04:50 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/withdraw_money_command.rb:10:in `execute'
+Completed 500 Internal Server Error in 4ms (ActiveRecord: 1.1ms | Allocations: 4925)
+
+
+  
+NameError (undefined local variable or method `account' for #<WithdrawMoneyCommand:0x0000000105e3ff70 @account_id="1", @amount=500.0>):
+  
+app/commands/withdraw_money_command.rb:11:in `execute'
+app/controllers/accounts/commands_controller.rb:16:in `withdraw'
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:05:12 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+  [1m[36mRead::BankAccount Load (0.0ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/withdraw_money_command.rb:10:in `execute'
+Completed 500 Internal Server Error in 5ms (ActiveRecord: 1.2ms | Allocations: 4920)
+
+
+  
+NameError (undefined local variable or method `account' for #<WithdrawMoneyCommand:0x0000000105dd7830 @account_id="1", @amount=500.0>):
+  
+app/commands/withdraw_money_command.rb:11:in `execute'
+app/controllers/accounts/commands_controller.rb:16:in `withdraw'
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:05:58 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+  [1m[36mRead::BankAccount Load (0.0ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/withdraw_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mEvent Create (0.3ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "money_withdrawn"], ["data", "{\"amount\":500.0}"], ["created_at", "2024-12-02 15:05:58.262677"], ["updated_at", "2024-12-02 15:05:58.262677"]]
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mRead::BankAccount Update (0.3ms)[0m  [1m[33mUPDATE "bank_accounts" SET "balance" = ?, "updated_at" = ? WHERE "bank_accounts"."id" = ?[0m  [["balance", 8500.0], ["updated_at", "2024-12-02 15:05:58.263927"], ["id", 1]]
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+  [1m[36mRead::Transaction Create (0.4ms)[0m  [1m[32mINSERT INTO "transactions" ("account_id", "transaction_type", "amount", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["transaction_type", "withdrawal"], ["amount", 500.0], ["created_at", "2024-12-02 15:05:58.267074"], ["updated_at", "2024-12-02 15:05:58.267074"]]
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+Completed 200 OK in 12ms (ActiveRecord: 2.6ms | Allocations: 16262)
+
+
+Started GET "/accounts/queries/:id?account_id=1" for ::1 at 2024-12-02 12:06:00 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"account_id"=>"1", "id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.2ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:9:in `execute'
+  [1m[36mRead::Transaction Load (0.2ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" = ? ORDER BY "transactions"."created_at" ASC[0m  [["account_id", 1]]
+  ↳ app/controllers/accounts/queries_controller.rb:7:in `show'
+Completed 200 OK in 5ms (Views: 1.7ms | ActiveRecord: 0.4ms | Allocations: 1631)
+
+
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:06:02 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+  [1m[36mRead::BankAccount Load (0.2ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/withdraw_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mEvent Create (0.5ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "money_withdrawn"], ["data", "{\"amount\":500.0}"], ["created_at", "2024-12-02 15:06:02.879399"], ["updated_at", "2024-12-02 15:06:02.879399"]]
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mRead::BankAccount Update (1.0ms)[0m  [1m[33mUPDATE "bank_accounts" SET "balance" = ?, "updated_at" = ? WHERE "bank_accounts"."id" = ?[0m  [["balance", 8000.0], ["updated_at", "2024-12-02 15:06:02.880886"], ["id", 1]]
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+  [1m[36mRead::Transaction Create (0.3ms)[0m  [1m[32mINSERT INTO "transactions" ("account_id", "transaction_type", "amount", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["transaction_type", "withdrawal"], ["amount", 500.0], ["created_at", "2024-12-02 15:06:02.882643"], ["updated_at", "2024-12-02 15:06:02.882643"]]
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+Completed 200 OK in 7ms (ActiveRecord: 2.1ms | Allocations: 5016)
+
+
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:06:03 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/withdraw_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mEvent Create (0.3ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "money_withdrawn"], ["data", "{\"amount\":500.0}"], ["created_at", "2024-12-02 15:06:03.456834"], ["updated_at", "2024-12-02 15:06:03.456834"]]
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mRead::BankAccount Update (0.4ms)[0m  [1m[33mUPDATE "bank_accounts" SET "balance" = ?, "updated_at" = ? WHERE "bank_accounts"."id" = ?[0m  [["balance", 7500.0], ["updated_at", "2024-12-02 15:06:03.458229"], ["id", 1]]
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+  [1m[36mRead::Transaction Create (0.5ms)[0m  [1m[32mINSERT INTO "transactions" ("account_id", "transaction_type", "amount", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["transaction_type", "withdrawal"], ["amount", 500.0], ["created_at", "2024-12-02 15:06:03.459659"], ["updated_at", "2024-12-02 15:06:03.459659"]]
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+Completed 200 OK in 5ms (ActiveRecord: 1.5ms | Allocations: 5016)
+
+
+Started GET "/accounts/queries/:id?account_id=1" for ::1 at 2024-12-02 12:06:05 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"account_id"=>"1", "id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:9:in `execute'
+  [1m[36mRead::Transaction Load (0.0ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" = ? ORDER BY "transactions"."created_at" ASC[0m  [["account_id", 1]]
+  ↳ app/controllers/accounts/queries_controller.rb:7:in `show'
+Completed 200 OK in 1ms (Views: 0.8ms | ActiveRecord: 0.1ms | Allocations: 1451)
+
+
+Started POST "/accounts/commands/1/withdraw?amount=500.0" for ::1 at 2024-12-02 12:06:07 -0300
+Processing by Accounts::CommandsController#withdraw as */*
+  Parameters: {"amount"=>"500.0", "id"=>"1"}
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/commands/withdraw_money_command.rb:10:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mEvent Create (0.4ms)[0m  [1m[32mINSERT INTO "events" ("entity_id", "event_type", "data", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["entity_id", 1], ["event_type", "money_withdrawn"], ["data", "{\"amount\":500.0}"], ["created_at", "2024-12-02 15:06:07.457989"], ["updated_at", "2024-12-02 15:06:07.457989"]]
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:13:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mRead::BankAccount Update (0.6ms)[0m  [1m[33mUPDATE "bank_accounts" SET "balance" = ?, "updated_at" = ? WHERE "bank_accounts"."id" = ?[0m  [["balance", 7000.0], ["updated_at", "2024-12-02 15:06:07.459498"], ["id", 1]]
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:14:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mbegin transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+  [1m[36mRead::Transaction Create (0.3ms)[0m  [1m[32mINSERT INTO "transactions" ("account_id", "transaction_type", "amount", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id"[0m  [["account_id", 1], ["transaction_type", "withdrawal"], ["amount", 500.0], ["created_at", "2024-12-02 15:06:07.460977"], ["updated_at", "2024-12-02 15:06:07.460977"]]
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mcommit transaction[0m
+  ↳ app/commands/withdraw_money_command.rb:16:in `execute'
+Completed 200 OK in 5ms (ActiveRecord: 1.5ms | Allocations: 5015)
+
+
+Started GET "/accounts/queries/:id?account_id=1" for ::1 at 2024-12-02 12:06:08 -0300
+Processing by Accounts::QueriesController#show as */*
+  Parameters: {"account_id"=>"1", "id"=>":id"}
+  [1m[36mRead::BankAccount Load (0.1ms)[0m  [1m[34mSELECT "bank_accounts".* FROM "bank_accounts" WHERE "bank_accounts"."account_id" = ? LIMIT ?[0m  [["account_id", 1], ["LIMIT", 1]]
+  ↳ app/queries/fetch_account_details_query.rb:9:in `execute'
+  [1m[36mRead::Transaction Load (0.0ms)[0m  [1m[34mSELECT "transactions".* FROM "transactions" WHERE "transactions"."account_id" = ? ORDER BY "transactions"."created_at" ASC[0m  [["account_id", 1]]
+  ↳ app/controllers/accounts/queries_controller.rb:7:in `show'
+Completed 200 OK in 3ms (Views: 2.0ms | ActiveRecord: 0.1ms | Allocations: 1511)
+
+

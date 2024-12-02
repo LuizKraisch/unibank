@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "dd2c1eeb-8ac7-48fc-9932-b77bf006339d",
+		"name": "Unibank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13439476",
+		"_collection_link": "https://gold-crescent-86898.postman.co/workspace/New-Team-Workspace~450104bb-3df4-485b-b406-243f80d4697b/collection/13439476-dd2c1eeb-8ac7-48fc-9932-b77bf006339d?action=share&source=collection_link&creator=13439476"
+	},
+	"item": [
+		{
+			"name": "accounts_query",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/accounts/queries/:id?account_id=1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts",
+						"queries",
+						":id"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "1"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "accounts_commands",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/accounts/commands?account_id=1",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts",
+						"commands"
+					],
+					"query": [
+						{
+							"key": "account_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deposit_accounts_command",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/accounts/commands/:id/deposit?amount=3000.0",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts",
+						"commands",
+						":id",
+						"deposit"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "3000.0"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "withdraw_accounts_command",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "localhost:3000/accounts/commands/:id/withdraw?amount=500.0",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"accounts",
+						"commands",
+						":id",
+						"withdraw"
+					],
+					"query": [
+						{
+							"key": "amount",
+							"value": "500.0"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
